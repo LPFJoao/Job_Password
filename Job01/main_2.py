@@ -24,6 +24,7 @@ def mot_pass_valid (mot_pass):
         else:
              print ("Password need atleast 1 special character")
 
+        return mot_pass_valid
 while True:
     mot_pass = input(" Veuillez entrer votre mot de pass : ")
 
@@ -32,3 +33,8 @@ while True:
         break
     else:
         print("try again")
+
+import hashlib
+
+hash_object = hashlib.sha256(mot_pass.encode())
+print(hash_object.hexdigest())
