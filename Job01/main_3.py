@@ -40,3 +40,4 @@ import hashlib
 
 hash_object = hashlib.sha256(mot_pass.encode())
 print(hash_object.hexdigest())
+
