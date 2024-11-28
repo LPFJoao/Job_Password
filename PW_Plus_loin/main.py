@@ -75,7 +75,7 @@ while True:
 
         label = input("Enter a label for this password (Email, Bank Account, etc): ").strip()
         passwords = load_passwords()
-        passwords[label] = final_pw  # Store the password under its label
+        passwords[label] = final_pw  
         save_passwords(passwords)
         print(f"Password saved under the label '{label}'.")
 
@@ -88,9 +88,10 @@ while True:
         else:
             print("No passwords stored yet.")
 
-    elif choice == "3":  # Exit the program
+    elif choice == "3":  
         print("Exiting the program. Goodbye!")
         break
 
     else:
         print("Invalid choice. Please enter 1, 2, or 3.")
+
