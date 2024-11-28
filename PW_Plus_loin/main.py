@@ -19,10 +19,12 @@ def save_passwords(passwords):
 while True:
     print("What would you like to do?")
     print("1. Generate a new password")
-    print("2. Display stored passwords")
-    print("3. Exit")
+    print("2. Input your own password")
+    print("3. Display stored passwords")
+    print("4. Compare stored passwords")
+    print("5. Exit")
     
-    choice = input("Enter your choice (1, 2, or 3): ").strip()
+    choice = input("Enter your choice (1, 2, 3, 4 or 5): ").strip()
     
     if choice == "1": 
         lower_string = string.ascii_lowercase
@@ -75,11 +77,62 @@ while True:
 
         label = input("Enter a label for this password (Email, Bank Account, etc): ").strip()
         passwords = load_passwords()
-        passwords[label] = final_pw  
+        password_hash = hash_object.hexdigest()
+        passwords[label] = { "password" : final_pw, "hash" :  password_hash}  
         save_passwords(passwords)
         print(f"Password saved under the label '{label}'.")
 
-    elif choice == "2": 
+    elif choice == "2":
+        def final_pw_valid(final_pw):
+    
+            final_pw_ok = True
+
+    
+            if len(final_pw) < 8:
+                print("Length of password needs to be 8 or more characters.")
+                final_pw_ok = False
+    
+            if not any(character.isupper() for character in final_pw):
+                print("Password needs at least one uppercase letter.")
+                final_pw_ok = False
+    
+            if not any(character.islower() for character in final_pw):
+                print("Password needs at least one lowercase letter.")
+                final_pw_ok = False
+   
+            if not any(character.isdigit() for character in final_pw):
+                print("Password needs at least one number.")
+                final_pw_ok = False
+    
+            if not any(character in string.punctuation for character in final_pw):
+                print("Password needs at least one special character.")
+                final_pw_ok = False
+        
+            return final_pw_ok
+
+        while True:
+            final_pw = input("Veuillez entrer votre mot de passe : ")
+
+            if final_pw_valid(final_pw):
+                print("Mot de passe valide!")
+                break
+            else:
+                print("Essayez encore.")
+
+            print("Your auto-generated password is:", final_pw)
+
+        
+        hash_object = hashlib.sha256(final_pw.encode())
+        print("SHA-256 hash of the password:", hash_object.hexdigest())
+
+        label = input("Enter a label for this password (Email, Bank Account, etc): ").strip()
+        passwords = load_passwords()
+        password_hash = hash_object.hexdigest()
+        passwords[label] =  {"password" : final_pw, "hash" :  password_hash}
+        save_passwords(passwords)
+        print(f"Password saved under the label '{label}'.")
+
+    elif choice == "3": 
         passwords = load_passwords()
         if passwords:
             print("Stored Passwords:")
@@ -88,7 +141,11 @@ while True:
         else:
             print("No passwords stored yet.")
 
-    elif choice == "3":  
+    
+
+
+
+    elif choice == "5":  
         print("Exiting the program. Goodbye!")
         break
 
