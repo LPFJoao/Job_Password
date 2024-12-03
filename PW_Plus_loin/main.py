@@ -9,24 +9,24 @@ PASSWORD_FILE = "passwords.json"
 def load_passwords():
     if not os.path.exists(PASSWORD_FILE):
         return {}  
-    with open(PASSWORD_FILE, 'r') as file:
+    with open(PASSWORD_FILE, 'r') as file: #'r' is the mode on what the file open for: on this case is open on read mode only
+
         return json.load(file)
 
 def save_passwords(passwords):
-    with open(PASSWORD_FILE, 'w') as file:
+    with open(PASSWORD_FILE, 'w') as file: #'a' is the mode on what the file open for: on this case is open on append mode which doensr overwrite
         json.dump(passwords, file, indent=4)
 
 while True:
     print("What would you like to do?")
-    print("1. Generate a new password")
-    print("2. Input your own password")
-    print("3. Display stored passwords")
-    print("4. Compare stored passwords")
-    print("5. Exit")
+    print("a. Generate a new password")
+    print("b. Input your own password")
+    print("c. Display stored passwords")    
+    print("d. Exit")
     
-    choice = input("Enter your choice (1, 2, 3, 4 or 5): ").strip()
+    Option = input("Enter your Option (a, b, c or d): ").strip().lower()
     
-    if choice == "1": 
+    if Option == "a": 
         lower_string = string.ascii_lowercase
         upper_string = string.ascii_uppercase
         spc_char = string.punctuation
@@ -60,10 +60,10 @@ while True:
                 print("Invalid input. Please enter a valid number.")
         
         
-        pw_lower = random.choices(lower, k=n_lower)
-        pw_upper = random.choices(upper, k=n_upper)
-        pw_numbers = random.choices(numbers, k=n_numbers)
-        pw_specials = random.choices(special, k=n_spc_chars)
+        pw_lower = random.Options(lower, k=n_lower)
+        pw_upper = random.Options(upper, k=n_upper)
+        pw_numbers = random.Options(numbers, k=n_numbers)
+        pw_specials = random.Options(special, k=n_spc_chars)
 
         pw_chars = pw_upper + pw_lower + pw_numbers + pw_specials
         random.shuffle(pw_chars)
@@ -82,7 +82,7 @@ while True:
         save_passwords(passwords)
         print(f"Password saved under the label '{label}'.")
 
-    elif choice == "2":
+    elif Option == "b":
         def final_pw_valid(final_pw):
     
             final_pw_ok = True
@@ -128,11 +128,17 @@ while True:
         label = input("Enter a label for this password (Email, Bank Account, etc): ").strip()
         passwords = load_passwords()
         password_hash = hash_object.hexdigest()
-        passwords[label] =  {"password" : final_pw, "hash" :  password_hash}
-        save_passwords(passwords)
-        print(f"Password saved under the label '{label}'.")
+        
+        if any(entry.get("hash") == password_hash for entry in passwords.values()):
+            print("This password already exists in the database. Please try a different one.")
 
-    elif choice == "3": 
+        else:
+           passwords[label] =  {"password" : final_pw, "hash" :  password_hash}
+           save_passwords(passwords)
+           print(f"Password saved under the label '{label}'.")
+
+     
+    elif Option == "c": 
         passwords = load_passwords()
         if passwords:
             print("Stored Passwords:")
@@ -142,15 +148,10 @@ while True:
             print("No passwords stored yet.")
 
     
-
-
-
-
-
-    elif choice == "5":  
+    elif Option == "d":  
         print("Exiting the program. Goodbye!")
         break
 
     else:
-        print("Invalid choice. Please enter 1, 2, or 3.")
+        print("Invalid Option. Please enter a, b, or c.")
 
